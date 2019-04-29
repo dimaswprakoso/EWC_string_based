@@ -11,7 +11,7 @@ import time
 # ----------------------------------------------------------------------------#
 # Configuration
 # ----------------------------------------------------------------------------#
-start = time.time()
+# start = time.time()
 
 db_user = 'root'
 db_database = 'sharebox'
@@ -104,8 +104,13 @@ def NLP(data):
         stemmed_words.append(ps.stem(w))
 
     data = stemmed_words
-    end = time.time()
-    # print (end - start)
+
+    # lm = WordNetLemmatizer()
+    # lemmatized_words = []
+    # for w in words:
+    #     lemmatized_words.append(lm.lemmatize(w))
+    # data = lemmatized_words
+
     return data
 
 
@@ -323,6 +328,6 @@ print(ev)
 results = eval_recommendations(ev)
 print(results)
 
-end = time.time()
-print(end - start)
+# end = time.time()
+# print(end - start)
 
