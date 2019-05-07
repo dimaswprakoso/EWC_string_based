@@ -1,11 +1,19 @@
 import mysql.connector
+import datetime
+import time
+import result_log as logging
+
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import PorterStemmer
+from nltk.stem.wordnet import WordNetLemmatizer
 from scipy import spatial
 from collections import OrderedDict
 from operator import itemgetter
-import time
+
+
+starttime  = datetime.datetime.now()
+print("start  :%s" % starttime)
 
 
 # ----------------------------------------------------------------------------#
@@ -97,19 +105,21 @@ def NLP(data):
                  'organic', 'remainder']
     words = [w for w in words if not w in term_list]  # for each word check if
 
+    # data = words
+
     # 5. Find Stem # Porter Stemmer
-    ps = PorterStemmer()
-    stemmed_words = []
-    for w in words:
-        stemmed_words.append(ps.stem(w))
-
-    data = stemmed_words
-
-    # lm = WordNetLemmatizer()
-    # lemmatized_words = []
+    # ps = PorterStemmer()
+    # stemmed_words = []
     # for w in words:
-    #     lemmatized_words.append(lm.lemmatize(w))
-    # data = lemmatized_words
+    #     stemmed_words.append(ps.stem(w))
+    #
+    # data = stemmed_words
+
+    lm = WordNetLemmatizer()
+    lemmatized_words = []
+    for w in words:
+        lemmatized_words.append(lm.lemmatize(w))
+    data = lemmatized_words
 
     return data
 
@@ -282,7 +292,7 @@ def eval_recommendations(ev):
 # ----------------------------------------------------------------------------#
 # --------------- Config -------------------- #
 # sample = 13
-top_n = 5 # Maximal number of recommendations in the recommendation set.
+top_n = 10 # Maximal number of recommendations in the recommendation set.
 min_sim = 0.1  # higher than zero
 
 ev = {}  # dictionary containing all evaluations of recommendations
