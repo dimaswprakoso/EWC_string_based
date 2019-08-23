@@ -1,8 +1,4 @@
 import mysql.connector
-import datetime
-import time
-import result_log as logging
-
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import PorterStemmer
@@ -11,9 +7,9 @@ from scipy import spatial
 from collections import OrderedDict
 from operator import itemgetter
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-starttime  = datetime.datetime.now()
-print("start  :%s" % starttime)
 
 
 # ----------------------------------------------------------------------------#
@@ -93,16 +89,18 @@ def NLP(data):
     words = tokenizer.tokenize(data)
 
     # 2. Remove short words
-    words = [w for w in words if len(w) > 3]
+    words = [w for w in words if len(w) > 2]
 
     # 3. Remove Stopwords # load stopwords from enlgihs language
     stop_words = set(stopwords.words("english"))
     words = [w for w in words if not w in stop_words]  # for each word check if
 
     # 4 Remove common terminology in waste listings e.g. (waste)
-    term_list = ['waste', 'process', 'consultancy', 'advice', 'training', 'service', 'managing', 'management',
-                 'recycling', 'recycle', 'industry', 'industrial', 'material', 'quantity', 'support', 'residue',
-                 'organic', 'remainder']
+    term_list = ['waste', 'wastes', 'scrap', 'scraps', 'process', 'processes', 'processed', 'processing', 'unprocessed',
+                 'consultancy', 'advice', 'training', 'service', 'managing', 'management', 'recycling', 'recycle',
+                 'industry', 'industrial', 'material', 'materials', 'quantity', 'support', 'residue', 'organic',
+                 'remainder', 'specific', 'particular', 'solution', 'solutions', 'substance', 'substances', 'product',
+                 'production', 'use', 'used', 'unused', 'consumption', 'otherwise', 'specified', 'based', 'spent']
     words = [w for w in words if not w in term_list]  # for each word check if
 
     # data = words
@@ -173,7 +171,6 @@ def recommend(item_desc, ewc_words):
     # match the words from the item description against the words of each EWC code description
     for k, l in ewc_words.items():
         # Lets do some matching -->
-        # uw = find_unique_words(item_desc, {k:l})
         item_vec1[it] = gen_item_vector(l, uw)  # ewc code vector
         item_vec2[it] = gen_item_vector(item_desc, uw)  # item desc vector
 
@@ -338,6 +335,5 @@ print(ev)
 results = eval_recommendations(ev)
 print(results)
 
-# end = time.time()
-# print(end - start)
+
 
