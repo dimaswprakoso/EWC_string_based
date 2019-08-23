@@ -18,33 +18,28 @@ from numpy.linalg import norm
 
 import math as math
 
-
 starttime = datetime.datetime.now()
 print("start  :%s" % starttime)
 
 # ----------------------------------------------------------------------------#
 # Configuration
 # ----------------------------------------------------------------------------#
-# start = time.time()
-
 db_user = 'root'
 db_database = 'sharebox'
 language = 'EN'
 
-# testing---------#
-method = 'string'  # croft, li, dimas
-sent_sim = 'string'  # croft:summmarize, li:maximum
-ic = 'no'  # yes, no
-# word_sim_th_list = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-# top_n_list = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
-top_n_list = [5,15,20]
+# testing---------------------------------------------------------------------#
+method = 'string' # string-based
+sent_sim = 'string'
+ic = 'no' # information content
+top_n_list = [10] # N-value in Top-N recommendation
 
-string_sim = 'string'  # croft:if the word is not in wordnet then apply string sim, li:0
-word_sim_algo = 'string'  # path, wup, lin, li
-base_word = 'raw'  # raw, stem, lemma
-# pos = 'all'  # noun, all
-min_sim = 0.000001  # higher than zero
-# ----------------#
+string_sim = 'string'
+word_sim_algo = 'string'
+base_word = 'raw'  # pre-processing, options: raw, stem, lemma
+
+min_sim = 0.000001  # recommendation threshold
+# ----------------------------------------------------------------------------#
 
 # ----------------------------------------------------------------------------#
 # 0. Initialize
@@ -126,10 +121,6 @@ def NLP(data):
                  'remainder', 'specific', 'particular', 'solution', 'solutions', 'substance', 'substances', 'product',
                  'production', 'use', 'used', 'unused', 'consumption', 'otherwise', 'specified', 'based', 'spent',
                  'hazardous', 'dangerous', 'containing', 'other']
-
-    # term_list = ['waste', 'process', 'consultancy', 'advice', 'training', 'service', 'managing', 'management',
-    #              'recycling', 'recycle', 'industry', 'industrial', 'material', 'quantity', 'support', 'residue',
-    #              'organic', 'remainder']
 
     words = [w for w in words if not w in term_list]  # for each word check if
     data = words
@@ -419,7 +410,7 @@ for top_n in top_n_list:
         # Evaluate if the recommendation was correct (with stats)
         ev[m] = eval_topn(rec, item_list[m][1])
 
-    # Calculate the performance metrics (e.g. accuracy, precision, recall, F1) over all items
+    # Calculate the performance metrics (e.g. recall, ARHR, precision) over all items
     print(ev)
     # logging.log_result_ev(ev)
     results = eval_recommendations(ev)
